@@ -9,15 +9,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 <style>
-:root{
-  --bg:#080b12;--bg2:#0b1019;--panel:#111827;--border:#1f2a3c;--border-soft:#172132;
-  --txt:#e8edf5;--muted:#8a99b0;--dim:#5d6b82;--accent:#22d3ee;--accent2:#38bdf8;
-  --green:#34d399;--amber:#fbbf24;--red:#f87171;--grid:#16202f;
-}
+:root{--bg:#080b12;--bg2:#0b1019;--panel:#111827;--border:#1f2a3c;--border-soft:#172132;--txt:#e8edf5;--muted:#8a99b0;--dim:#5d6b82;--accent:#22d3ee;--accent2:#38bdf8;--green:#34d399;--amber:#fbbf24;--red:#f87171;--violet:#a78bfa;--grid:#16202f}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:radial-gradient(1200px 600px at 80% -10%,#0e1726 0%,var(--bg) 55%);color:var(--txt);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 .num{font-family:"Space Grotesk",Inter,sans-serif;font-variant-numeric:tabular-nums}
-/* gate */
 #gate{position:fixed;inset:0;display:grid;place-items:center;background:radial-gradient(800px 500px at 50% 20%,#0e1726,var(--bg));z-index:50}
 .gatebox{width:min(380px,90vw);background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--border);border-radius:18px;padding:30px 28px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
 .gatebox .logo{width:52px;height:52px;border-radius:13px;background:linear-gradient(135deg,var(--accent),#0ea5b7);display:inline-grid;place-items:center;margin-bottom:16px}
@@ -28,130 +23,178 @@ html,body{background:radial-gradient(1200px 600px at 80% -10%,#0e1726 0%,var(--b
 .gatebox button{width:100%;margin-top:12px;background:linear-gradient(135deg,var(--accent),#0ea5b7);color:#04222a;font-weight:600;border:0;border-radius:10px;padding:12px;font-size:14px;cursor:pointer;font-family:Inter}
 .gatebox .err{color:var(--red);font-size:12px;margin-top:10px;min-height:14px}
 #app{display:none}
-.wrap{max-width:1280px;margin:0 auto;padding:28px clamp(16px,4vw,40px) 60px}
-header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid var(--border);margin-bottom:26px}
+.wrap{max-width:1320px;margin:0 auto;padding:28px clamp(16px,4vw,40px) 60px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid var(--border);margin-bottom:24px}
 .brand{display:flex;align-items:center;gap:14px}
 .logo48{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#0ea5b7);display:grid;place-items:center;box-shadow:0 6px 24px rgba(34,211,238,.25)}
 .brand h1{font-family:"Space Grotesk";font-size:20px;font-weight:700;line-height:1.1}
 .brand p{color:var(--muted);font-size:12.5px;margin-top:3px}
 .meta{text-align:right}.meta .wk{font-family:"Space Grotesk";font-size:26px;font-weight:700;color:var(--accent)}.meta .dt{color:var(--dim);font-size:12px;margin-top:2px}
-.sec{display:flex;align-items:center;gap:10px;margin:30px 2px 14px}.sec h2{font-size:12.5px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted)}.sec .line{flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
-.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}@media(max-width:1000px){.kpis{grid-template-columns:repeat(3,1fr)}}@media(max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}}
-.kpi{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--border-soft);border-radius:16px;padding:16px}
-.kpi .lbl{font-size:11px;color:var(--muted);letter-spacing:.4px;text-transform:uppercase}.kpi .val{font-family:"Space Grotesk";font-size:30px;font-weight:700;margin-top:9px;line-height:1}.kpi .sub{font-size:11.5px;color:var(--dim);margin-top:7px}
-.kpi.good .val{color:var(--green)}.kpi.warn .val{color:var(--amber)}.kpi.bad .val{color:var(--red)}.kpi.acc .val{color:var(--accent)}
-.grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.sec{display:flex;align-items:center;gap:10px;margin:28px 2px 14px}.sec h2{font-size:12.5px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted)}.sec .line{flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:13px}
+.kpi{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--border-soft);border-radius:15px;padding:15px}
+.kpi .lbl{font-size:10.5px;color:var(--muted);letter-spacing:.4px;text-transform:uppercase}.kpi .val{font-family:"Space Grotesk";font-size:27px;font-weight:700;margin-top:8px;line-height:1}.kpi .sub{font-size:11px;color:var(--dim);margin-top:6px}
+.kpi.good .val{color:var(--green)}.kpi.warn .val{color:var(--amber)}.kpi.bad .val{color:var(--red)}.kpi.acc .val{color:var(--accent)}.kpi.vio .val{color:var(--violet)}
+.grid2{display:grid;grid-template-columns:1.5fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+@media(max-width:900px){.grid2,.grid3{grid-template-columns:1fr}}
 .panel{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--border-soft);border-radius:18px;padding:18px}
 .panel h3{font-size:14px;font-weight:600}.panel .hint{font-size:11.5px;color:var(--dim);margin:2px 0 10px}
-.chart{width:100%;height:300px}.chart.sm{height:230px}
-table{width:100%;border-collapse:collapse;font-size:12.5px}th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--border-soft);white-space:nowrap}th{color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase}td:first-child,th:first-child{text-align:left}
-.tbl-scroll{max-height:330px;overflow:auto}.neg{color:var(--red)}.pos{color:var(--green)}.tag{font-family:"Space Grotesk";font-weight:600}
-.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:6px;font-size:12px;color:var(--muted)}.legend span{display:inline-flex;align-items:center;gap:7px}.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.chart{width:100%;height:300px}.chart.sm{height:240px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--border-soft);white-space:nowrap}th{color:var(--muted);font-weight:500;font-size:10.5px;text-transform:uppercase}td:first-child,th:first-child{text-align:left}
+.tbl-scroll{max-height:320px;overflow:auto}.neg{color:var(--red)}.pos{color:var(--green)}.tag{font-family:"Space Grotesk";font-weight:600}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;font-size:12px;color:var(--muted)}.legend span{display:inline-flex;align-items:center;gap:7px}.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.bars{display:flex;flex-direction:column;gap:11px;margin-top:4px}
+.bar-row{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center;font-size:12.5px}
+.bar-track{background:#0a0f1a;border-radius:6px;height:22px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:7px;font-size:11px;color:#04222a;font-weight:600;font-family:"Space Grotesk"}
+.repro-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px}
+.repro-box{background:#0a0f1a;border:1px solid var(--border-soft);border-radius:12px;padding:14px}
+.repro-box .n{font-family:"Space Grotesk";font-size:26px;font-weight:700}.repro-box .t{font-size:11px;color:var(--muted);margin-top:4px}
 footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--border);color:var(--dim);font-size:11.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .pill{font-size:10.5px;color:var(--dim);border:1px solid var(--border);border-radius:999px;padding:3px 9px}
 </style>
 </head>
 <body>
-<div id="gate">
-  <div class="gatebox">
-    <div class="logo"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#04222a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h13v10H1z"/><path d="M14 7h4l3 3v3h-7z"/><circle cx="5.5" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg></div>
-    <h1>Mercotruck</h1>
-    <p>Tablero de Supervisión de Programación — acceso restringido</p>
-    <input id="pw" type="password" placeholder="Contraseña" autocomplete="current-password"/>
-    <button id="go">Ingresar</button>
-    <div class="err" id="err"></div>
-  </div>
-</div>
+<div id="gate"><div class="gatebox">
+  <div class="logo"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#04222a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h13v10H1z"/><path d="M14 7h4l3 3v3h-7z"/><circle cx="5.5" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg></div>
+  <h1>Mercotruck</h1><p>Tablero de Supervisión de Programación — acceso restringido</p>
+  <input id="pw" type="password" placeholder="Contraseña" autocomplete="current-password"/>
+  <button id="go">Ingresar</button><div class="err" id="err"></div>
+</div></div>
 
-<div id="app">
-  <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="logo48"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#04222a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h13v10H1z"/><path d="M14 7h4l3 3v3h-7z"/><circle cx="5.5" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg></div>
-        <div><h1>Tablero de Supervisión de Programación</h1><p>Mercotruck · Transporte Internacional de Cargas</p></div>
-      </div>
-      <div class="meta"><div class="wk" id="curWk">—</div><div class="dt" id="curDt">—</div></div>
-    </header>
-    <div class="sec"><h2>Semana en curso</h2><div class="line"></div></div>
-    <div class="kpis" id="kpis"></div>
-    <div class="sec"><h2>Rentabilidad semanal · USD</h2><div class="line"></div></div>
-    <div class="grid2">
-      <div class="panel"><h3>Evolución de renta por semana</h3><div class="hint">Cargas ejecutadas · barras = renta USD · línea = % rentab. Rojo = pérdida.</div><div id="cRenta" class="chart"></div></div>
-      <div class="panel"><h3>Distribución de semáforo</h3><div class="hint">Solicitudes por margen (umbral 250 USD).</div><div id="cSem" class="chart sm"></div>
-        <div class="legend"><span><i class="dot" style="background:var(--green)"></i> OK ≥250</span><span><i class="dot" style="background:var(--amber)"></i> Bajo mínimo</span><span><i class="dot" style="background:var(--red)"></i> Negativa</span></div></div>
+<div id="app"><div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo48"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#04222a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h13v10H1z"/><path d="M14 7h4l3 3v3h-7z"/><circle cx="5.5" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg></div>
+      <div><h1>Tablero de Supervisión de Programación</h1><p>Mercotruck · Transporte Internacional de Cargas</p></div>
     </div>
-    <div class="sec"><h2>Acumulado mensual</h2><div class="line"></div></div>
-    <div class="grid2">
-      <div class="panel"><h3>Renta y cargas por mes</h3><div class="hint">Junio en curso (parcial).</div><div id="cMes" class="chart"></div></div>
-      <div class="panel"><h3>Detalle semanal</h3><div class="hint">Venta / Compra / Renta en USD · 2026.</div><div class="tbl-scroll"><table id="tbl"><thead><tr><th>Sem</th><th>Cargas</th><th>Venta</th><th>Compra</th><th>Renta</th><th>%</th></tr></thead><tbody></tbody></table></div></div>
-    </div>
-    <footer><div>Actualizado <b id="ftDt">—</b> · Fuente: Airtable «Mercotruck 1.1» (Operaciones + Solicitudes)</div><div class="pill">datos cifrados en reposo · AES-256-GCM</div></footer>
+    <div class="meta"><div class="wk" id="curWk">—</div><div class="dt" id="curDt">—</div></div>
+  </header>
+
+  <div class="sec"><h2>Operación — semana en curso</h2><div class="line"></div></div>
+  <div class="kpis" id="kpis1"></div>
+
+  <div class="sec"><h2>Acumulado del año (YTD)</h2><div class="line"></div></div>
+  <div class="kpis" id="kpis2"></div>
+
+  <div class="sec"><h2>Rentabilidad</h2><div class="line"></div></div>
+  <div class="grid2">
+    <div class="panel"><h3>Evolución de renta por semana</h3><div class="hint">Cargas ejecutadas (Operaciones) · barras = renta USD · línea = % rentab. Rojo = pérdida.</div><div id="cRenta" class="chart"></div></div>
+    <div class="panel"><h3>Semáforo de rentabilidad</h3><div class="hint">Solicitudes por margen (umbral 250 USD).</div><div id="cSem" class="chart sm"></div>
+      <div class="legend"><span><i class="dot" style="background:var(--green)"></i> OK ≥250</span><span><i class="dot" style="background:var(--amber)"></i> Bajo mínimo</span><span><i class="dot" style="background:var(--red)"></i> Negativa</span></div></div>
   </div>
-</div>
+
+  <div class="sec"><h2>Estado operativo y aprobación</h2><div class="line"></div></div>
+  <div class="grid3">
+    <div class="panel"><h3>Estados de la semana</h3><div class="hint">Composición de las solicitudes (W en curso).</div><div class="bars" id="estados"></div></div>
+    <div class="panel"><h3>Aprobación de solicitudes</h3><div class="hint">Pipeline activo.</div><div id="cAprob" class="chart sm"></div></div>
+    <div class="panel"><h3>Reprogramaciones</h3><div class="hint">Acumulado y costo de oportunidad.</div>
+      <div class="repro-grid">
+        <div class="repro-box"><div class="n" id="rCli" style="color:var(--amber)">—</div><div class="t">Resp. CLIENTE</div></div>
+        <div class="repro-box"><div class="n" id="rInt" style="color:var(--red)">—</div><div class="t">Resp. MERCOTRUCK</div></div>
+        <div class="repro-box"><div class="n num" id="coCli">—</div><div class="t">Costo oport. cliente (USD)</div></div>
+        <div class="repro-box"><div class="n num" id="coMtk">—</div><div class="t">Costo oport. MTK (USD)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec"><h2>Desempeño comercial y corredores</h2><div class="line"></div></div>
+  <div class="grid2">
+    <div class="panel"><h3>Por comercial — semana en curso</h3><div class="hint">Solicitudes vs cerradas (confirmado + en planta) y conversión.</div><div id="cComercial" class="chart"></div></div>
+    <div class="panel"><h3>Corredores (cerradas)</h3><div class="hint">Por país de facturación venta → compra.</div>
+      <div class="tbl-scroll"><table id="tblCorr"><thead><tr><th>Ruta</th><th>Cargas</th><th>Camiones</th><th>Renta USD</th></tr></thead><tbody></tbody></table></div></div>
+  </div>
+
+  <div class="sec"><h2>Acumulado mensual</h2><div class="line"></div></div>
+  <div class="grid2">
+    <div class="panel"><h3>Renta y cargas por mes</h3><div class="hint">Junio en curso (parcial).</div><div id="cMes" class="chart"></div></div>
+    <div class="panel"><h3>Detalle semanal</h3><div class="hint">Venta / Compra / Renta en USD · 2026.</div><div class="tbl-scroll"><table id="tbl"><thead><tr><th>Sem</th><th>Cargas</th><th>Venta</th><th>Compra</th><th>Renta</th><th>%</th></tr></thead><tbody></tbody></table></div></div>
+  </div>
+
+  <footer><div>Actualizado <b id="ftDt">—</b> · Fuente: Airtable «Mercotruck 1.1» (Operaciones + Solicitudes de Programación)</div><div class="pill">datos cifrados · AES-256-GCM</div></footer>
+</div></div>
 
 <script>
-const ENC = "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";
-const ITER = 250000;
-
+const ENC = "GhueLmrUi/G+FvQcSPqshx2FUrE5U6YwiNlf9eTd+SO2N0Y0a2mEGGw0y335e7KI3tqcR46fyIeb6N3Cb/STMafWl7KpNO+sLd++4EcITqsfbm6jOglTGet06UrZBVpwu++B1wVhkwvXrZ5czgPjkC1alffI2Qt4APzI7FYkBNciMgLDz4B/Gu0Th5WAMLiPo0Pkc3KdrWKB7QsymAtJdSDcsJgmblIIy37IUR3/KLq4ZMcTV1WU9qT1UiyH9TnWEUy+ExKLkJuekb+8jBohv4g79kvoU6hlgKK6ZfPzOsghyKtvnw25d4S4VIgDqw2Yy8Mb5HVoungy49A8C3jCYmDrAnAgpDJJ+Ho3Ppr0wmKB5g7yodMm7IANNxuVOw31+UJ1r9ky8p0OQEjilWcy1I7EAurp0fPkzExMZWijXMX608EIV4RwVogznjCsMyU+dVA2uT9j8b4hGghgS6omfIad5BXX39FfrN7FMa2Mazt4hz7TNSaGnq+N2+jZRnMhYJ/jCY6t7nr/8rlJkUS4AuuVDh3raw6WKTE8ZVVwvE97hMSF+qsdgALxpzFN4ryfYxcIhyn6f0CXniR2NpHdnf6Z9GJDejA/J7q/QHB24XooPHOrKTi0f79P5vA397AwRMaKa98ijzH3ASELkmf9SwJwdl3PKkJzItfickaKTYueDYMnNb4zFIHmEnAMtPqVTjNmDl/aw+Ff0DCnfhnRlIKjgMWI5f3/C80u3JBGi6UvNpDKBmDUYonWW1PLLZhI+KU+MGqh35ObOxlC/i2tCdrCMqRKbd8PWHyVS6qmHyxhB+azpqOPkKWady4WCaZU/vuWj03a/p0SgKiuE/oK/kkOYNcnHpVjJvDWoWLn+yB85yV9OyOa4RXn14lean0zdHIH16WP0WQHy/JPyQf/DX4TXiMOZfUZh9DcPRO7k2w3xfQtod/siZnOsqQAzOAwIXYfUd/HcanyywYx1J92CxAGIIb3faV6uJQlp66eI23nWsQ29ZFiyVXRmjdTpNSGujJ489l+H5q0SsHype8QtKpQQrmZNJc5nsNmdaDe3dusdNF/GNa9p8KhWfwdQvyNQ7IUwx3PEhTFivm3sKneMUGnBhcvV08RE/Q0zGSU3lScrqjcjZEUZg4rmKMn2bVwPattVViPzxTksLWT21/thZVntw9tJJLOb3GsdFYznowCLMy4EDIjFuQXTA2tPs3bSV1uOTOtPaztHrptVtrXZtV9QsTAMzxRL3eyWrsaGPCDOh+MPLF1EnMZCaZvWMRvWDR/CZopJo59bFQZGpDWcOBdcQRW/aZ/QquEi5amLU3C+JyNA16CVNVRzV01suyQDXP0L13SNPNONUk2KE38Mt6M+LB04PCxgNKhq2NzYJPqSMr7CB1LBs7HU2kDIjOIVBjTcyAGkqyPsG8axMS5kLPsexKIFLnNliiooQyqnDu8VCpmzlQ1jj8A18P+iuMuYU9Uj+GYrxNQuNSWdzHu1J/9eaCzQrM6DZzWns+qXCQMpdPnPT6/6/iEJot3tmaOmwiF8INuJLfjZcMIv7LB9JtKVVEk7JH8CY8dXhAjLv70IbNot5gtvAS1ZDPHW3y5CALTMlaaabCrq+KuDXaoI2h0d78yzaVEk11J/v03z1PaOPyOPJwndRpCaxKi3PwzDj+uriomGHq0tQSjGYRbssbYxwW+6B8PXSCBKkffS/jsNt+xhgxcpanLoO96zxdak0pmodGMXIb5FqUM8tieJ7hUNPBuDuvgxjNrfMFNZj0bgUjdqmKXJ1YonFKSoT47289X+y8qfZQAec5xDPBsgQOKhWGaxrYKZZQCJNVsQ+3w6RoNIiZPEufMVdpIIjWrjyFjLH7X9Buqx0/ehEg/0H6XH4E82g4untqXbTv1UXnhJgEGau0UuA33Uw6/0wgXAWMYWAUXz479Javp9Pia46nuw1StR1l+3LW5llgK2/dKourC6lJb8PDLyoCQ42a9oDeT2+aKJedgtqkbDNLHr4CYRaf1rcj1W6SxMmrF9gAZXnlB3otvqxx/MvIBrBWeVRIhMto7L/w/C0Cj3uifE/AFXijAU/OYFW06l+7Ph3t2Vo1JhTkAeDVvc7onvR81bngirxW6yEsQIgM9ANHjItO3DHzqAUqZwtfPXrmfe21kBnaHX49g+6Bjtnuqz+E23HfFQXcZ4WocUuhlDeUhE4Y0SNxXAUQ3vFb2zQfbywShSWPtrxSqbQJMhHhRY+tShs1LU9jNguEYSi75xkYK9V/oJdEfELdTb4/3bqkiZ8dyzLSus6eRc4hUPz7FIv918SlDcKgUxIE75W/RZfyEfG1CJ2OJzq1+VLHB8aCCs/3xqMT4kSbLyiGJCPWnIewoev92WzYWdcTdt1F4XbrFcQKeYmvLcKEN2cn7HjFtkjqte7Iun7kbwNsfm9FKn1KkDJ1j2LmQlCdMp5VzELoOjR/P5Q6t6nU0nyx0TPcDH0M9JHHO5G3BdxTjBB4EiIMUA1G3X9R6lOmgC1yTtO25FdJgpt5BBBU/PkAaQ3F+hvxeU+1IORh1JfjgIhsVlmg98F4BPWQseT7gAK6hrD0cJoDAq0bJqFghhjwzU5aDNYCoeSu4RAjdRAQ3h5S4ehXHpFmiV/WfCjfcvK65vvcdg4txHlDu7bpo2MMhME7+Cfo0eIDe6lF9rLf7+z8Uk6Ty9g56lmks86y3zadk3D0v/Vio/e5WpWZjmwVnRzZGZzIsgXp1k0mO7rQq7CVKG9gE++/0qkJgIYpvjqvsqbqxpKq/SCnjRx6SNG1L8xLSWoiB4L//b6aXmSbpe0McWPqD94SHXkAmtXYkY5OpcNhlEjHpfdZy935GNwJEludZWa842hhSOxrhDIs8EoZPfC9yYThbiDWIb1eTaHgTi/Lbxcld/5+IVMRGO8bOJ/Yifoji0H4syyAYPl4ua4QmGPXFAatJo2167M2FMUymMUJa86ueFRxt83I/pTmTujFacnoOdcEUovbMagYc4JYLXdlYy6Lb8dsc6VeD+mI4qgwefR6DgYDlpsCLpjVY3TALJknSbFJMixQs5KES+eDS+VNRLBa3wNslkz5LBh48BtRUHRDVXrCF7798bfovblc8Vo8XkaI2EQSF+Zvg7uJNBr+4+OVRABngKow8tlBJFsF+j8AUTmaVQT/Fm2w6OUYown256PKKxSezH8+ZT48igQRJLp8Xy+03k73rZG4eyvUWPCG3a9UaCjIcxCJQucqudfVIQMd4DvDhHNKTc2Fkm62iXZNstELsofVKxFlPbXa4ZP2BXebrqJygt+dnmfkLXKwVH8O97tap59GCc99KmHQaPrgOMzArCmr5pNqaGs3PEd1kHbpn6XqbVv/6sNkhVyKNxKhr16zCeSqyFPa10NTx1OB7wAyokutdEH4kOayG4EdvsAa0Ednbdyo3J7fppOa+T7IERAPZE13k+zji1IsuHnJmlf3Dh15nC8WDqZ6OWHnhH4FhUG3F4y3CMEriVfULGn4Shbtba+PXXIgts/Q/qvGDAtOhaufGZCdmJ1Ds/tvTLSR4mW1xFvLxy2H7SRedIf1cM+BTUFVlbiL0yjIJdMv1psI8FmLft9nAs0YiZ5nf3tFjZRc5vkT3/yUeOFFbU98wfpdL4AKSJv6iU5Rq61eRLwx7L8w2W/YWL8N1tcUMt5oUQyjWekhjXfbKmqZsuiezH5AHUZP8R3U98UmbQqJS6mVWXZVitQUi+MdmPqdhGCa2hYRFhcGqEcsVrPcisjV6lcGTw/j4otdEEs8t53WzwYUjGA6oKz/glcqtuO78FXJUZ+hf8PlSGhurO8CY9ULnBe0aaOoIHQHcxm05dPhUYuE8/LdBO6WHAEb3y2e4NzX5eQn1obUryhYdgylSDxqSzn8f0fP6/cP9vY0HW/cFHrpQsr0EXgfHm1QqvWYjw8IR3I/Zj7FqlVUr2XBOmdmAAV2LqVtxwlL2ZCV7ilFTGgZ4bTbPBgsmSQxyCZtukPP9GKGtrhDeySgx6ps9HgL39XK75UIMCGBqBS5NfmHS2J8R7Xjt4ofE1VmM2kslEV5jAj2RIH1vzGSG1u5+jkKcTETsgxsy7YTCV6qwPpYaCYqmyKKp/+/qt+AehMFIfjJF9qMjN8juxJZv9oaWy7pramhkqFGOPxTggiBpugvImu1XTToe8OPq3L1ZiqT75qKaO8O5np21i0YWDXB939CEAstZZYPwxMRV2b68G4LeT9KrQ4/01Sg6P73xL1I0lwtIbzS4CJPk8/q3NQVwOARE3Iu1JybVoSof0HUm63bDgKNT+Zkh8AwqNLxNe5fwCyn77zdpXdRin07/PExCm34v6QNpsvqpnbLNYKLmIFk2RuK38Rfsa/AWjA55KeNCbB5/ELKOH3KIdnT0TGbjDgc4w+7hwb4uPBM8POUI4pzgqxCmU0ACQARqq5spSC8DhhhI8jbmbqvsjPE5+T923y7hd5wv6ZcD9KtPJmWAj4LJDsa3ZSt6QV6gXVvxDcCPBvygPLVmRDUYuCd0CEr2uS0xTNP4oudWQFf1qu/RXBdzuAb/Cd842A9nU61q85EZbRLddqlDU/nJ9IltmEq9t17P3ZSlu5AVnML7PvL7tKbSGuQzis85KPT0Ng7j037wSLOHAxkzEB0eBNwthZhyCn9vKfLvrJvCQz+23eopHyPWCZ+oyDEYjsB3COUhJE8zz3Iwhw/OiZ9/imVnIgE6dK49Cb2B6ecyQG1mZNURCGQgViXjHT8gJLdAJPsYgFnfcIOeKs+sL0XdSWxrQw7pYipla/b4Thf+rbRsKx8I9P4ueVIdQ7gDWF9pBCdUMbstXMC5Zr4DScCYZAYHXWDcQGJm2GZ8E7Sh4kCdSEEvBDG7YxC0mTvdkuCLpdoBgN6N6DXGPDls64xlqOfOHPo+hC/U6CkGK8nQf7BmRo4WxeIcUgIR1ow0RRCbBgSPYo50Bu9lgcR0cPBuzjS3uEo5gFvL44jFdma4ke0r4QxCBg+QCpcGOAkhewfBgT/aaR5rjKJMs3W8pltKC97gjv1DWyD6jhrW4Ih1PIX9D/wvWNV3z8sTVTZk8XdayIYVVf/m/0E96iBDlrbiSmgo54UY9p1sdczoi4TKHK6RRwUs3iVwYQwU9eCfIRfqcXRjw7IG5edevCTIrxZ4axfClwDLBHcAGicrYGB2gyV1cPuN2+2tZH5qUhXYnq80AvWFv5xyV3SlSPzhESS+HavtgWCn6ft2YRDbioFscDlgTYA6PKkkEncinUGP9e4POX1ADyqltGwnSlOq/a+RH5tNwY0YQ2Vn2h42R+Nfqx3X/XTy8uyoRf3/tGNoo1NSyfDnCLk10OYV4CPj2KAQ8pFQgw10ajuHBhBHUpGdVj3HF866IqbtOnBvrPQAT4HC"; const ITER = 250000;
 async function decryptData(b64, password){
   const raw = Uint8Array.from(atob(b64), c=>c.charCodeAt(0));
-  const salt = raw.slice(0,16), iv = raw.slice(16,28), body = raw.slice(28);
-  const enc = new TextEncoder();
-  const baseKey = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
-  const key = await crypto.subtle.deriveKey({name:'PBKDF2', salt, iterations:ITER, hash:'SHA-256'}, baseKey, {name:'AES-GCM', length:256}, false, ['decrypt']);
-  const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv}, key, body);
+  const salt=raw.slice(0,16),iv=raw.slice(16,28),body=raw.slice(28);
+  const bk=await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveKey']);
+  const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:ITER,hash:'SHA-256'},bk,{name:'AES-GCM',length:256},false,['decrypt']);
+  const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv},key,body);
   return JSON.parse(new TextDecoder().decode(pt));
 }
+const $=s=>document.querySelector(s);
+async function tryLogin(){const pw=$('#pw').value;$('#err').textContent='';try{const D=await decryptData(ENC,pw);sessionStorage.setItem('mtk_pw',pw);$('#gate').style.display='none';$('#app').style.display='block';render(D);}catch(e){$('#err').textContent='Contraseña incorrecta.';}}
+$('#go').addEventListener('click',tryLogin);$('#pw').addEventListener('keydown',e=>{if(e.key==='Enter')tryLogin();});
+window.addEventListener('load',()=>{const s=sessionStorage.getItem('mtk_pw');if(s){$('#pw').value=s;tryLogin();}$('#pw').focus();});
 
-const $ = s=>document.querySelector(s);
-async function tryLogin(){
-  const pw = $('#pw').value; $('#err').textContent='';
-  try{
-    const DATA = await decryptData(ENC, pw);
-    sessionStorage.setItem('mtk_pw', pw);
-    $('#gate').style.display='none'; $('#app').style.display='block';
-    render(DATA);
-  }catch(e){ $('#err').textContent='Contraseña incorrecta.'; }
-}
-$('#go').addEventListener('click', tryLogin);
-$('#pw').addEventListener('keydown', e=>{ if(e.key==='Enter') tryLogin(); });
-window.addEventListener('load', ()=>{ const s=sessionStorage.getItem('mtk_pw'); if(s){ $('#pw').value=s; tryLogin(); } $('#pw').focus(); });
+const fUSD=n=>(n<0?"-":"")+"$"+Math.abs(Math.round(n)).toLocaleString("es-AR");
+const fK=n=>(n<0?"-":"")+"$"+(Math.abs(n)>=1000?(Math.abs(n)/1000).toFixed(Math.abs(n)>=10000?0:1)+"k":Math.round(Math.abs(n)));
+const fPct=n=>(n*100).toFixed(n>=0&&n<0.1&&n>-0.1?1:0)+"%";
+const C=getComputedStyle(document.documentElement);const col=n=>C.getPropertyValue(n).trim();
+const ESTCOL={"CAMIÓN EN PLANTA":"--green","EMBARQUE CONFIRMADO":"--accent","EMBARQUE SIN CONFIRMAR":"--amber","FALTA TTE":"--red"};
 
-const fmtUSD = n => (n<0?"-":"")+"$"+Math.abs(Math.round(n)).toLocaleString("es-AR");
-const fmtPct = n => (n*100).toFixed(n>=0&&n<0.1?1:0)+"%";
-const C = getComputedStyle(document.documentElement); const col = n => C.getPropertyValue(n).trim();
+function card(k){return `<div class="kpi ${k.cls||''}"><div class="lbl">${k.lbl}</div><div class="val num">${k.val}</div><div class="sub">${k.sub||''}</div></div>`;}
 
-function render(DATA){
-  $('#curWk').textContent = DATA.semanaActual.replace("2026-","");
-  $('#curDt').textContent = "Actualizado "+DATA.actualizado;
-  $('#ftDt').textContent = DATA.actualizado;
-  const ec = DATA.enCurso;
-  const kpis = [
-    {lbl:"Solicitudes",val:ec.sol,sub:"recibidas esta semana",cls:""},
-    {lbl:"Confirmadas",val:ec.conf,sub:fmtPct(ec.pctConf)+" de confirmación",cls:"good"},
-    {lbl:"Falta TTE",val:ec.faltaTTE,sub:"sin transporte",cls:ec.faltaTTE>0?"bad":""},
-    {lbl:"Renta semana",val:fmtUSD(ec.renta),sub:fmtPct(ec.pctRent)+" rentabilidad",cls:"acc"},
-    {lbl:"Reprog. cliente",val:ec.reproCli,sub:"resp. cliente",cls:ec.reproCli>0?"warn":""},
-    {lbl:"Próxima ("+DATA.proxima.wk+")",val:DATA.proxima.sol,sub:DATA.proxima.faltaTTE+" falta TTE",cls:""},
-  ];
-  $('#kpis').innerHTML = kpis.map(k=>`<div class="kpi ${k.cls}"><div class="lbl">${k.lbl}</div><div class="val num">${k.val}</div><div class="sub">${k.sub}</div></div>`).join("");
-  document.querySelector('#tbl tbody').innerHTML = DATA.semanal.slice().reverse().map(r=>`<tr><td class="tag">${r.w}</td><td class="num">${r.cargas}</td><td class="num">${fmtUSD(r.venta)}</td><td class="num">${fmtUSD(r.compra)}</td><td class="num ${r.renta<0?'neg':'pos'}">${fmtUSD(r.renta)}</td><td class="num ${r.pct<0?'neg':''}">${fmtPct(r.pct)}</td></tr>`).join("");
-  const base={textStyle:{fontFamily:'Inter',color:col('--muted')},grid:{left:54,right:54,top:24,bottom:30},tooltip:{trigger:'axis',backgroundColor:'#0d1422',borderColor:col('--border'),textStyle:{color:col('--txt')}}};
-  const renta=echarts.init($('#cRenta'));
-  renta.setOption({...base,legend:{data:['Renta USD','% Rentab.'],textStyle:{color:col('--muted')},top:0,right:0},
-    xAxis:{type:'category',data:DATA.semanal.map(d=>d.w),axisLine:{lineStyle:{color:col('--border')}},axisLabel:{color:col('--dim')}},
+function render(D){
+  $('#curWk').textContent=D.semanaActual.replace("2026-","");
+  $('#curDt').textContent="Actualizado "+D.actualizado;$('#ftDt').textContent=D.actualizado;
+  const e=D.enCurso;
+  $('#kpis1').innerHTML=[
+    {lbl:"Solicitudes",val:e.sol,sub:"recibidas esta semana"},
+    {lbl:"Cerradas",val:e.cerr,sub:e.emb+" confirm. + "+e.planta+" en planta",cls:"good"},
+    {lbl:"% Cierre",val:fPct(e.pctCierre),sub:"cerradas / solicitudes",cls:"acc"},
+    {lbl:"Falta TTE",val:e.falta,sub:"sin transporte",cls:e.falta>0?"bad":""},
+    {lbl:"Renta cerradas",val:fK(e.rentaCerr),sub:"proyectada (USD)",cls:"acc"},
+    {lbl:"Pend. aprobación",val:e.pend,sub:"esperando OK",cls:e.pend>0?"warn":""},
+    {lbl:"Rechazadas",val:e.rech,sub:"esta semana",cls:e.rech>0?"warn":""},
+    {lbl:"Repro cliente",val:e.reproCli,sub:e.reproInt+" internas",cls:e.reproCli>0?"warn":""},
+  ].map(card).join("");
+  const y=D.ytd;
+  $('#kpis2').innerHTML=[
+    {lbl:"Cargas YTD",val:y.cargas,sub:"ejecutadas 2026"},
+    {lbl:"Venta YTD",val:fK(y.venta),sub:"facturación (USD)"},
+    {lbl:"Renta YTD",val:fK(y.renta),sub:"bruta acumulada",cls:"good"},
+    {lbl:"Margen YTD",val:fPct(y.pct),sub:"renta / venta",cls:"acc"},
+    {lbl:"Costo oport.",val:fK(D.repro.coCliente+D.repro.coMtk),sub:"por reprogramaciones",cls:"warn"},
+    {lbl:"Próxima ("+D.proxima.wk+")",val:D.proxima.sol,sub:D.proxima.falta+" falta TTE a cerrar",cls:"vio"},
+  ].map(card).join("");
+
+  // estados bars
+  const maxE=Math.max(...D.estados.map(x=>x.v));
+  $('#estados').innerHTML=D.estados.map(x=>{const c=col(ESTCOL[x.k]||'--dim');return `<div class="bar-row"><div style="color:var(--muted);font-size:11.5px">${x.k}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.max(8,x.v/maxE*100)}%;background:${c}">${x.v}</div></div><div></div></div>`;}).join("");
+
+  // repro numbers
+  $('#rCli').textContent=D.repro.cliente;$('#rInt').textContent=D.repro.interna;
+  $('#coCli').textContent=fUSD(D.repro.coCliente);$('#coMtk').textContent=fUSD(D.repro.coMtk);
+
+  // corredor table
+  document.querySelector('#tblCorr tbody').innerHTML=D.corredor.map(r=>`<tr><td class="tag">${r.ruta}</td><td class="num">${r.n}</td><td class="num">${r.camiones}</td><td class="num ${r.renta<0?'neg':'pos'}">${fUSD(r.renta)}</td></tr>`).join("");
+
+  // weekly detail table
+  document.querySelector('#tbl tbody').innerHTML=D.semanal.slice().reverse().map(r=>`<tr><td class="tag">${r.w}</td><td class="num">${r.cargas}</td><td class="num">${fUSD(r.venta)}</td><td class="num">${fUSD(r.compra)}</td><td class="num ${r.renta<0?'neg':'pos'}">${fUSD(r.renta)}</td><td class="num ${r.pct<0?'neg':''}">${fPct(r.pct)}</td></tr>`).join("");
+
+  const base={textStyle:{fontFamily:'Inter',color:col('--muted')},grid:{left:52,right:50,top:24,bottom:28},tooltip:{trigger:'axis',backgroundColor:'#0d1422',borderColor:col('--border'),textStyle:{color:col('--txt')}}};
+  echarts.init($('#cRenta')).setOption({...base,legend:{data:['Renta USD','% Rentab.'],textStyle:{color:col('--muted')},top:0,right:0},
+    xAxis:{type:'category',data:D.semanal.map(d=>d.w),axisLine:{lineStyle:{color:col('--border')}},axisLabel:{color:col('--dim')}},
     yAxis:[{type:'value',name:'USD',axisLabel:{color:col('--dim'),formatter:v=>v/1000+'k'},splitLine:{lineStyle:{color:col('--grid')}}},{type:'value',name:'%',axisLabel:{color:col('--dim'),formatter:v=>(v*100).toFixed(0)+'%'},splitLine:{show:false},min:-0.5,max:0.7}],
-    series:[{name:'Renta USD',type:'bar',data:DATA.semanal.map(d=>({value:d.renta,itemStyle:{color:d.renta<0?col('--red'):col('--accent'),borderRadius:[3,3,0,0]}})),barWidth:'58%'},{name:'% Rentab.',type:'line',yAxisIndex:1,smooth:true,symbol:'circle',symbolSize:6,data:DATA.semanal.map(d=>d.pct),lineStyle:{color:col('--amber'),width:2},itemStyle:{color:col('--amber')}}]});
-  const sem=echarts.init($('#cSem'));
-  sem.setOption({tooltip:{trigger:'item',backgroundColor:'#0d1422',borderColor:col('--border'),textStyle:{color:col('--txt')}},
-    series:[{type:'pie',radius:['58%','82%'],center:['50%','50%'],label:{show:true,position:'center',formatter:()=>{const t=DATA.semaforo.verde+DATA.semaforo.amarillo+DATA.semaforo.rojo;return '{a|'+t+'}\n{b|solicitudes}'},rich:{a:{fontSize:30,fontFamily:'Space Grotesk',fontWeight:700,color:col('--txt')},b:{fontSize:11,color:col('--dim'),padding:[4,0,0,0]}}},labelLine:{show:false},
-      data:[{value:DATA.semaforo.verde,name:'OK ≥250',itemStyle:{color:col('--green')}},{value:DATA.semaforo.amarillo,name:'Bajo mínimo',itemStyle:{color:col('--amber')}},{value:DATA.semaforo.rojo,name:'Negativa',itemStyle:{color:col('--red')}}]}]});
-  const mes=echarts.init($('#cMes'));
-  mes.setOption({...base,legend:{data:['Renta USD','Cargas'],textStyle:{color:col('--muted')},top:0,right:0},
-    xAxis:{type:'category',data:DATA.mensual.map(d=>d.m),axisLine:{lineStyle:{color:col('--border')}},axisLabel:{color:col('--dim')}},
+    series:[{name:'Renta USD',type:'bar',data:D.semanal.map(d=>({value:d.renta,itemStyle:{color:d.renta<0?col('--red'):col('--accent'),borderRadius:[3,3,0,0]}})),barWidth:'58%'},{name:'% Rentab.',type:'line',yAxisIndex:1,smooth:true,symbol:'circle',symbolSize:6,data:D.semanal.map(d=>d.pct),lineStyle:{color:col('--amber'),width:2},itemStyle:{color:col('--amber')}}]});
+  echarts.init($('#cSem')).setOption({tooltip:{trigger:'item',backgroundColor:'#0d1422',borderColor:col('--border'),textStyle:{color:col('--txt')}},
+    series:[{type:'pie',radius:['58%','82%'],center:['50%','50%'],label:{show:true,position:'center',formatter:()=>{const t=D.semaforo.verde+D.semaforo.amarillo+D.semaforo.rojo;return '{a|'+t+'}\n{b|solicitudes}'},rich:{a:{fontSize:28,fontFamily:'Space Grotesk',fontWeight:700,color:col('--txt')},b:{fontSize:11,color:col('--dim'),padding:[4,0,0,0]}}},labelLine:{show:false},
+      data:[{value:D.semaforo.verde,name:'OK',itemStyle:{color:col('--green')}},{value:D.semaforo.amarillo,name:'Bajo mín.',itemStyle:{color:col('--amber')}},{value:D.semaforo.rojo,name:'Negativa',itemStyle:{color:col('--red')}}]}]});
+  echarts.init($('#cAprob')).setOption({tooltip:{trigger:'item',backgroundColor:'#0d1422',borderColor:col('--border'),textStyle:{color:col('--txt')}},legend:{bottom:0,textStyle:{color:col('--muted')}},
+    series:[{type:'pie',radius:['45%','72%'],center:['50%','44%'],label:{show:false},data:D.aprob.map(a=>({value:a.v,name:a.k,itemStyle:{color:a.k=='Aprobada'?col('--green'):a.k=='Rechazada'?col('--red'):col('--amber')}}))}]});
+  const cm=D.comercial;
+  echarts.init($('#cComercial')).setOption({...base,grid:{left:52,right:20,top:24,bottom:28},legend:{data:['Solicitudes','Cerradas'],textStyle:{color:col('--muted')},top:0,right:0},
+    xAxis:{type:'category',data:cm.map(c=>c.nombre.split(' ')[0]),axisLine:{lineStyle:{color:col('--border')}},axisLabel:{color:col('--dim')}},
+    yAxis:{type:'value',axisLabel:{color:col('--dim')},splitLine:{lineStyle:{color:col('--grid')}}},
+    series:[{name:'Solicitudes',type:'bar',data:cm.map(c=>c.sol),itemStyle:{color:col('--dim'),borderRadius:[3,3,0,0]},barWidth:'30%'},{name:'Cerradas',type:'bar',data:cm.map(c=>({value:c.cerr,itemStyle:{color:col('--green'),borderRadius:[3,3,0,0]}})),barWidth:'30%',label:{show:true,position:'top',color:col('--accent'),fontFamily:'Space Grotesk',formatter:p=>fPct(cm[p.dataIndex].conv)}}]});
+  echarts.init($('#cMes')).setOption({...base,legend:{data:['Renta USD','Cargas'],textStyle:{color:col('--muted')},top:0,right:0},
+    xAxis:{type:'category',data:D.mensual.map(d=>d.m),axisLine:{lineStyle:{color:col('--border')}},axisLabel:{color:col('--dim')}},
     yAxis:[{type:'value',name:'USD',axisLabel:{color:col('--dim'),formatter:v=>v/1000+'k'},splitLine:{lineStyle:{color:col('--grid')}}},{type:'value',name:'cargas',axisLabel:{color:col('--dim')},splitLine:{show:false}}],
-    series:[{name:'Renta USD',type:'bar',data:DATA.mensual.map(d=>d.renta),itemStyle:{color:col('--accent2'),borderRadius:[3,3,0,0]},barWidth:'46%'},{name:'Cargas',type:'line',yAxisIndex:1,smooth:true,symbol:'circle',symbolSize:7,data:DATA.mensual.map(d=>d.cargas),lineStyle:{color:col('--green'),width:2},itemStyle:{color:col('--green')}}]});
-  addEventListener('resize',()=>{renta.resize();sem.resize();mes.resize()});
+    series:[{name:'Renta USD',type:'bar',data:D.mensual.map(d=>d.renta),itemStyle:{color:col('--accent2'),borderRadius:[3,3,0,0]},barWidth:'46%'},{name:'Cargas',type:'line',yAxisIndex:1,smooth:true,symbol:'circle',symbolSize:7,data:D.mensual.map(d=>d.cargas),lineStyle:{color:col('--green'),width:2},itemStyle:{color:col('--green')}}]});
+  addEventListener('resize',()=>{document.querySelectorAll('.chart').forEach(c=>{const i=echarts.getInstanceByDom(c);if(i)i.resize();});});
 }
 </script>
 </body>
