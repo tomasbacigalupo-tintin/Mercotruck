@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Mercotruck · Tablero de Supervisión de Programación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+:root{
+  --bg:#080b12;--bg2:#0b1019;--panel:#111827;--border:#1f2a3c;--border-soft:#172132;
+  --txt:#e8edf5;--muted:#8a99b0;--dim:#5d6b82;--accent:#22d3ee;--accent2:#38bdf8;
+  --green:#34d399;--amber:#fbbf24;--red:#f87171;--grid:#16202f;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:radial-gradient(1200px 600px at 80% -10%,#0e1726 0%,var(--bg) 55%);color:var(--txt);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.num{font-family:"Space Grotesk",Inter,sans-serif;font-variant-numeric:tabular-nums}
+/* gate */
+#gate{position:fixed;inset:0;display:grid;place-items:center;background:radial-gradient(800px 500px at 50% 20%,#0e1726,var(--bg));z-index:50}
+.gatebox{width:min(380px,90vw);background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--border);border-radius:18px;padding:30px 28px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.gatebox .logo{width:52px;height:52px;border-radius:13px;background:linear-gradient(135deg,var(--accent),#0ea5b7);display:inline-grid;place-items:center;margin-bottom:16px}
+.gatebox h1{font-family:"Space Grotesk";font-size:18px;margin-bottom:4px}
+.gatebox p{color:var(--muted);font-size:12.5px;margin-bottom:18px}
+.gatebox input{width:100%;background:#0a0f1a;border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--txt);font-size:14px;outline:none}
+.gatebox input:focus{border-color:var(--accent)}
+.gatebox button{width:100%;margin-top:12px;background:linear-gradient(135deg,var(--accent),#0ea5b7);color:#04222a;font-weight:600;border:0;border-radius:10px;padding:12px;font-size:14px;cursor:pointer;font-family:Inter}
+.gatebox .err{color:var(--red);font-size:12px;margin-top:10px;min-height:14px}
+#app{display:none}
+.wrap{max-width:1280px;margin:0 auto;padding:28px clamp(16px,4vw,40px) 60px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid var(--border);margin-bottom:26px}
+.brand{display:flex;align-items:center;gap:14px}
+.logo48{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#0ea5b7);display:grid;place-items:center;box-shadow:0 6px 24px rgba(34,211,238,.25)}
+.brand h1{font-family:"Space Grotesk";font-size:20px;font-weight:700;line-height:1.1}
+.brand p{color:var(--muted);font-size:12.5px;margin-top:3px}
+.meta{text-align:right}.meta .wk{font-family:"Space Grotesk";font-size:26px;font-weight:700;color:var(--accent)}.meta .dt{color:var(--dim);font-size:12px;margin-top:2px}
+.sec{display:flex;align-items:center;gap:10px;margin:30px 2px 14px}.sec h2{font-size:12.5px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted)}.sec .line{flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}@media(max-width:1000px){.kpis{grid-template-columns:repeat(3,1fr)}}@media(max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--border-soft);border-radius:16px;padding:16px}
+.kpi .lbl{font-size:11px;color:var(--muted);letter-spacing:.4px;text-transform:uppercase}.kpi .val{font-family:"Space Grotesk";font-size:30px;font-weight:700;margin-top:9px;line-height:1}.kpi .sub{font-size:11.5px;color:var(--dim);margin-top:7px}
+.kpi.good .val{color:var(--green)}.kpi.warn .val{color:var(--amber)}.kpi.bad .val{color:var(--red)}.kpi.acc .val{color:var(--accent)}
+.grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--border-soft);border-radius:18px;padding:18px}
+.panel h3{font-size:14px;font-weight:600}.panel .hint{font-size:11.5px;color:var(--dim);margin:2px 0 10px}
+.chart{width:100%;height:300px}.chart.sm{height:230px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--border-soft);white-space:nowrap}th{color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase}td:first-child,th:first-child{text-align:left}
+.tbl-scroll{max-height:330px;overflow:auto}.neg{color:var(--red)}.pos{color:var(--green)}.tag{font-family:"Space Grotesk";font-weight:600}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:6px;font-size:12px;color:var(--muted)}.legend span{display:inline-flex;align-items:center;gap:7px}.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--border);color:var(--dim);font-size:11.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.pill{font-size:10.5px;color:var(--dim);border:1px solid var(--border);border-radius:999px;padding:3px 9px}
+</style>
+</head>
+<body>
+<div id="gate">
+  <div class="gatebox">
+    <div class="logo"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#04222a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h13v10H1z"/><path d="M14 7h4l3 3v3h-7z"/><circle cx="5.5" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg></div>
+    <h1>Mercotruck</h1>
+    <p>Tablero de Supervisión de Programación — acceso restringido</p>
+    <input id="pw" type="password" placeholder="Contraseña" autocomplete="current-password"/>
+    <button id="go">Ingresar</button>
+    <div class="err" id="err"></div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo48"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#04222a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h13v10H1z"/><path d="M14 7h4l3 3v3h-7z"/><circle cx="5.5" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg></div>
+        <div><h1>Tablero de Supervisión de Programación</h1><p>Mercotruck · Transporte Internacional de Cargas</p></div>
+      </div>
+      <div class="meta"><div class="wk" id="curWk">—</div><div class="dt" id="curDt">—</div></div>
+    </header>
+    <div class="sec"><h2>Semana en curso</h2><div class="line"></div></div>
+    <div class="kpis" id="kpis"></div>
+    <div class="sec"><h2>Rentabilidad semanal · USD</h2><div class="line"></div></div>
+    <div class="grid2">
+      <div class="panel"><h3>Evolución de renta por semana</h3><div class="hint">Cargas ejecutadas · barras = renta USD · línea = % rentab. Rojo = pérdida.</div><div id="cRenta" class="chart"></div></div>
+      <div class="panel"><h3>Distribución de semáforo</h3><div class="hint">Solicitudes por margen (umbral 250 USD).</div><div id="cSem" class="chart sm"></div>
+        <div class="legend"><span><i class="dot" style="background:var(--green)"></i> OK ≥250</span><span><i class="dot" style="background:var(--amber)"></i> Bajo mínimo</span><span><i class="dot" style="background:var(--red)"></i> Negativa</span></div></div>
+    </div>
+    <div class="sec"><h2>Acumulado mensual</h2><div class="line"></div></div>
+    <div class="grid2">
+      <div class="panel"><h3>Renta y cargas por mes</h3><div class="hint">Junio en curso (parcial).</div><div id="cMes" class="chart"></div></div>
+      <div class="panel"><h3>Detalle semanal</h3><div class="hint">Venta / Compra / Renta en USD · 2026.</div><div class="tbl-scroll"><table id="tbl"><thead><tr><th>Sem</th><th>Cargas</th><th>Venta</th><th>Compra</th><th>Renta</th><th>%</th></tr></thead><tbody></tbody></table></div></div>
+    </div>
+    <footer><div>Actualizado <b id="ftDt">—</b> · Fuente: Airtable «Mercotruck 1.1» (Operaciones + Solicitudes)</div><div class="pill">datos cifrados en reposo · AES-256-GCM</div></footer>
+  </div>
+</div>
+
+<script>
+const ENC = "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";
+const ITER = 250000;
+
+async function decryptData(b64, password){
+  const raw = Uint8Array.from(atob(b64), c=>c.charCodeAt(0));
+  const salt = raw.slice(0,16), iv = raw.slice(16,28), body = raw.slice(28);
+  const enc = new TextEncoder();
+  const baseKey = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({name:'PBKDF2', salt, iterations:ITER, hash:'SHA-256'}, baseKey, {name:'AES-GCM', length:256}, false, ['decrypt']);
+  const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv}, key, body);
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+
+const $ = s=>document.querySelector(s);
+async function tryLogin(){
+  const pw = $('#pw').value; $('#err').textContent='';
+  try{
+    const DATA = await decryptData(ENC, pw);
+    sessionStorage.setItem('mtk_pw', pw);
+    $('#gate').style.display='none'; $('#app').style.display='block';
+    render(DATA);
+  }catch(e){ $('#err').textContent='Contraseña incorrecta.'; }
+}
+$('#go').addEventListener('click', tryLogin);
+$('#pw').addEventListener('keydown', e=>{ if(e.key==='Enter') tryLogin(); });
+window.addEventListener('load', ()=>{ const s=sessionStorage.getItem('mtk_pw'); if(s){ $('#pw').value=s; tryLogin(); } $('#pw').focus(); });
+
+const fmtUSD = n => (n<0?"-":"")+"$"+Math.abs(Math.round(n)).toLocaleString("es-AR");
+const fmtPct = n => (n*100).toFixed(n>=0&&n<0.1?1:0)+"%";
+const C = getComputedStyle(document.documentElement); const col = n => C.getPropertyValue(n).trim();
+
+function render(DATA){
+  $('#curWk').textContent = DATA.semanaActual.replace("2026-","");
+  $('#curDt').textContent = "Actualizado "+DATA.actualizado;
+  $('#ftDt').textContent = DATA.actualizado;
+  const ec = DATA.enCurso;
+  const kpis = [
+    {lbl:"Solicitudes",val:ec.sol,sub:"recibidas esta semana",cls:""},
+    {lbl:"Confirmadas",val:ec.conf,sub:fmtPct(ec.pctConf)+" de confirmación",cls:"good"},
+    {lbl:"Falta TTE",val:ec.faltaTTE,sub:"sin transporte",cls:ec.faltaTTE>0?"bad":""},
+    {lbl:"Renta semana",val:fmtUSD(ec.renta),sub:fmtPct(ec.pctRent)+" rentabilidad",cls:"acc"},
+    {lbl:"Reprog. cliente",val:ec.reproCli,sub:"resp. cliente",cls:ec.reproCli>0?"warn":""},
+    {lbl:"Próxima ("+DATA.proxima.wk+")",val:DATA.proxima.sol,sub:DATA.proxima.faltaTTE+" falta TTE",cls:""},
+  ];
+  $('#kpis').innerHTML = kpis.map(k=>`<div class="kpi ${k.cls}"><div class="lbl">${k.lbl}</div><div class="val num">${k.val}</div><div class="sub">${k.sub}</div></div>`).join("");
+  document.querySelector('#tbl tbody').innerHTML = DATA.semanal.slice().reverse().map(r=>`<tr><td class="tag">${r.w}</td><td class="num">${r.cargas}</td><td class="num">${fmtUSD(r.venta)}</td><td class="num">${fmtUSD(r.compra)}</td><td class="num ${r.renta<0?'neg':'pos'}">${fmtUSD(r.renta)}</td><td class="num ${r.pct<0?'neg':''}">${fmtPct(r.pct)}</td></tr>`).join("");
+  const base={textStyle:{fontFamily:'Inter',color:col('--muted')},grid:{left:54,right:54,top:24,bottom:30},tooltip:{trigger:'axis',backgroundColor:'#0d1422',borderColor:col('--border'),textStyle:{color:col('--txt')}}};
+  const renta=echarts.init($('#cRenta'));
+  renta.setOption({...base,legend:{data:['Renta USD','% Rentab.'],textStyle:{color:col('--muted')},top:0,right:0},
+    xAxis:{type:'category',data:DATA.semanal.map(d=>d.w),axisLine:{lineStyle:{color:col('--border')}},axisLabel:{color:col('--dim')}},
+    yAxis:[{type:'value',name:'USD',axisLabel:{color:col('--dim'),formatter:v=>v/1000+'k'},splitLine:{lineStyle:{color:col('--grid')}}},{type:'value',name:'%',axisLabel:{color:col('--dim'),formatter:v=>(v*100).toFixed(0)+'%'},splitLine:{show:false},min:-0.5,max:0.7}],
+    series:[{name:'Renta USD',type:'bar',data:DATA.semanal.map(d=>({value:d.renta,itemStyle:{color:d.renta<0?col('--red'):col('--accent'),borderRadius:[3,3,0,0]}})),barWidth:'58%'},{name:'% Rentab.',type:'line',yAxisIndex:1,smooth:true,symbol:'circle',symbolSize:6,data:DATA.semanal.map(d=>d.pct),lineStyle:{color:col('--amber'),width:2},itemStyle:{color:col('--amber')}}]});
+  const sem=echarts.init($('#cSem'));
+  sem.setOption({tooltip:{trigger:'item',backgroundColor:'#0d1422',borderColor:col('--border'),textStyle:{color:col('--txt')}},
+    series:[{type:'pie',radius:['58%','82%'],center:['50%','50%'],label:{show:true,position:'center',formatter:()=>{const t=DATA.semaforo.verde+DATA.semaforo.amarillo+DATA.semaforo.rojo;return '{a|'+t+'}\n{b|solicitudes}'},rich:{a:{fontSize:30,fontFamily:'Space Grotesk',fontWeight:700,color:col('--txt')},b:{fontSize:11,color:col('--dim'),padding:[4,0,0,0]}}},labelLine:{show:false},
+      data:[{value:DATA.semaforo.verde,name:'OK ≥250',itemStyle:{color:col('--green')}},{value:DATA.semaforo.amarillo,name:'Bajo mínimo',itemStyle:{color:col('--amber')}},{value:DATA.semaforo.rojo,name:'Negativa',itemStyle:{color:col('--red')}}]}]});
+  const mes=echarts.init($('#cMes'));
+  mes.setOption({...base,legend:{data:['Renta USD','Cargas'],textStyle:{color:col('--muted')},top:0,right:0},
+    xAxis:{type:'category',data:DATA.mensual.map(d=>d.m),axisLine:{lineStyle:{color:col('--border')}},axisLabel:{color:col('--dim')}},
+    yAxis:[{type:'value',name:'USD',axisLabel:{color:col('--dim'),formatter:v=>v/1000+'k'},splitLine:{lineStyle:{color:col('--grid')}}},{type:'value',name:'cargas',axisLabel:{color:col('--dim')},splitLine:{show:false}}],
+    series:[{name:'Renta USD',type:'bar',data:DATA.mensual.map(d=>d.renta),itemStyle:{color:col('--accent2'),borderRadius:[3,3,0,0]},barWidth:'46%'},{name:'Cargas',type:'line',yAxisIndex:1,smooth:true,symbol:'circle',symbolSize:7,data:DATA.mensual.map(d=>d.cargas),lineStyle:{color:col('--green'),width:2},itemStyle:{color:col('--green')}}]});
+  addEventListener('resize',()=>{renta.resize();sem.resize();mes.resize()});
+}
+</script>
+</body>
+</html>
